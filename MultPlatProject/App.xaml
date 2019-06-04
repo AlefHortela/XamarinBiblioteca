@@ -9,16 +9,30 @@
     <Application.MainPage>
         
         <!-- Cria instância de NavigationPage -->
-        <NavigationPage>
+        <!--<NavigationPage>
             
-            <!-- Determina parâmetros passados para o construtor de NavigationPage -->
+            --><!-- Determina parâmetros passados para o construtor de NavigationPage --><!--
             <x:Arguments>
             
-                <!-- Passa uma instância de AuthorsPage para o construtor,
+                --><!-- Passa uma instância de AuthorsPage para o construtor,
                     fazendo com que ela seja a primeira a ser exibida dentro
-                    do NavigationPage -->
+                    do NavigationPage --><!--
                 <local:AuthorsPage />
             </x:Arguments>
-        </NavigationPage>
+        </NavigationPage>-->
+        <TabbedPage Title="Abas">
+            <TabbedPage.Children>
+                <NavigationPage Title="Autores" Icon="author">
+                    <x:Arguments>
+                        <local:AuthorsPage/>
+                    </x:Arguments>
+                </NavigationPage>
+                <NavigationPage Title="Livros" Icon="book">
+                    <x:Arguments>
+                        <local:BooksPage/>
+                    </x:Arguments>
+                </NavigationPage>
+            </TabbedPage.Children>
+        </TabbedPage>
     </Application.MainPage>
 </Application>

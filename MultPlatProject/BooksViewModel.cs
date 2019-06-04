@@ -8,11 +8,7 @@ using Xamarin.Forms;
 
 namespace MultPlatProject
 {
-    public class AuthorsViewModel :
-        // Essa interface indica que instâncias dessa classe disparam evento
-        // avisando quando alguma propriedade muda de valor. Isso é usado pelos
-        // bindings, para atualizar valores diversos
-        INotifyPropertyChanged
+    class BooksViewModel : INotifyPropertyChanged
     {
         // Evento de propriedade alterada, deve ser disparado toda vez que uma
         // propriedade muda de valor. Definido em INotifyPropertyChanged
@@ -21,40 +17,57 @@ namespace MultPlatProject
         // Evento disparado quando requisição falha.
         public event EventHandler<ErrorResponse> RequestFailed;
 
-        // Propriedade de lista de autores consultados pelo ViewModel
-        IEnumerable<Author> mAuthors;
-        public IEnumerable<Author> Authors
+        // Propriedade de lista de livros consultados pelo ViewModel
+        IEnumerable<Book> mBooks;
+        public IEnumerable<Book> Books
         {
-            get => mAuthors; // No getter, meramente retorna variável interna
+            get => mBooks; // No getter, meramente retorna variável interna
             set
             {
                 // No setter, primeiro verifica se valor sendo atribuido é
                 // diferente do atual
-                if (!Equals(mAuthors, value))
+                if (!Equals(mBooks, value))
                 {
                     // Se for, atribui novo valor a variável interna.
-                    mAuthors = value;
+                    mBooks = value;
 
                     // E dispara evento indicando que a propriedade Authors mudou.
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Authors"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Books"));
                 }
             }
         }
 
-        // Commando de consulta de autores. Em tese, será executado quando usuário
+
+        //Criando variavel que indica carregamento iniciado, booleano já começam em false mas é sempre bom garantir.
+        bool _IsLoading = false;
+        public bool IsLoading
+        {
+            get => _IsLoading;
+            set
+            {
+                if (!Equals(_IsLoading, value))
+                {
+                    _IsLoading = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsLoading"));
+                }
+            }
+        }
+
+        // Commando de consulta de livros. Em tese, será executado quando usuário
         // tocar no botão de atualizar, ou quando for consultar os autores ao abrir
         // a tela.
         public ICommand GetCommand { get; private set; }
 
-        public AuthorsViewModel()
+        public BooksViewModel()
         {
             // Função para ser executada quando o GetCommand for executado.
             async void execute()
             {
                 try
                 {
+                    IsLoading = true;
                     // Vai atualizar autores
-                    Authors = await
+                    Books = await
 
                         // Começa pegando url do web service, como string
                         Constants.BaseServiceUrl
@@ -63,13 +76,13 @@ namespace MultPlatProject
                                  // para concatenar mais um pedaço de rota a URL.
                                  // No caso, o pedaço da rota é o nome da classe
                                  // Author, para consultar os autores.
-                                 .AppendPathSegment(typeof(Author).Name)
+                                 .AppendPathSegment(typeof(Book).Name)
 
                                  // Namespace Flurl também adiciona extensão em 
                                  // Url para realizar requisição HTTP GET na URL
                                  // especificada e, daí, desserializar o retorno
-                                 // como um tipo passado (no caso, uma List de Author.
-                                 .GetJsonAsync<List<Author>>();
+                                 // como um tipo passado (no caso, uma List de Book.
+                                 .GetJsonAsync<List<Book>>();
                 }
                 // Se webservice retornar erro, lança uma FlurlHttpException
                 catch (FlurlHttpException ex)
@@ -80,6 +93,10 @@ namespace MultPlatProject
 
                     // Invoca evento de requisição zoada.
                     RequestFailed?.Invoke(this, error);
+                }
+                finally
+                {
+                    IsLoading = false;
                 }
             }
 
