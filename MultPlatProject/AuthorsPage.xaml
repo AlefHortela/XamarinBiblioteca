@@ -12,6 +12,7 @@
             Quando clicado, executa o comando GetCommand de AuthorsViewModel e
             consulta os autores novamente. -->
         <ToolbarItem Command="{Binding GetCommand}" Icon="reload.png"/>
+        <ToolbarItem Clicked="ToolbarItem_Clicked" Icon="plus.png"/>
     </ContentPage.ToolbarItems>
     
     <!-- Define objeto no qual os elementos visuais da tela farão binding, por padrão -->

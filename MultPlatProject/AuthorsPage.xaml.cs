@@ -28,5 +28,10 @@ namespace MultPlatProject
             // Mostra alerta.
             DisplayAlert("Erro", e.Message, "ok");
         }
+
+        async void ToolbarItem_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushModalAsync(new NewAuthorPage());
+        }
     }
 }
